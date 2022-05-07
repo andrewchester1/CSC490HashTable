@@ -1,38 +1,37 @@
-def display_hash(hashTable):
-    for i in range(len(hashTable)):
-        print(i, end=" ")
+import re
+from AddressHashTable import *
+from ChainingHashTable import *
 
-        for j in hashTable[i]:
-            print("-->", end=" ")
-            print(j, end=" ")
+def prepareHashTable(str, htableType):
+    str = (re.sub(r'[^\w\s]', '', str)).split()
+    strLength = len(str)
 
-        print()
+    htable = None
+    if htableType == "Chaining":
+        htable = ChainingHashTable()
+    else:
+        htable = AddressHashTable(strLength)
 
+    for i in range(strLength):
+        htable.insert(str[i], i)
 
-# Creating Hashtable as
-# a nested list.
-HashTable = [[] for _ in range(10)]
+    if htableType != "Chaining":
+        htable.resize()
 
+    return htable
 
-# Hashing Function to return
-# key for every value.
-def Hashing(keyvalue):
-    return keyvalue % len(HashTable)
+keyword = "death"
 
+with open('poem.txt') as f:
+    str = f.read()
+    f.close()
 
-# Insert Function to add
-# values to the hash table
-def insert(Hashtable, keyvalue, value):
-    hash_key = Hashing(keyvalue)
-    Hashtable[hash_key].append(value)
+chainhtable = addresshtbale = prepareHashTable(str, "Chaining")
+chainhtable.display_hash()
+print("Chaining Hash Table value for key", keyword, "is", chainhtable.search(keyword))
 
+print("___________")
 
-# Driver Code
-insert(HashTable, 10, 'Allahabad')
-insert(HashTable, 25, 'Mumbai')
-insert(HashTable, 20, 'Mathura')
-insert(HashTable, 9, 'Delhi')
-insert(HashTable, 21, 'Punjab')
-insert(HashTable, 21, 'Noida')
-
-display_hash(HashTable)
+addresshtbale = prepareHashTable(str, "Address")
+addresshtbale.display_hash()
+print("Address Hash Table value for key", keyword, "is", addresshtbale.search(keyword))
